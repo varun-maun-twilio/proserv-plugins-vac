@@ -9,6 +9,7 @@ export const actionHook = function updatePendingTaskAttributesAtCompleteTask(
   flex: typeof Flex,
   _manager: Flex.Manager,
 ) {
+  /*
   flex.Actions.replaceAction(`${actionName}`, async (payload, original) => {
     // Execute any pending task attribute updates
     if (payload.task?.taskSid) {
@@ -18,4 +19,5 @@ export const actionHook = function updatePendingTaskAttributesAtCompleteTask(
     // Carry on
     original(payload);
   });
+  */
 };

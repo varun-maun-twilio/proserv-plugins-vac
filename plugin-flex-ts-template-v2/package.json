@@ -1,6 +1,6 @@
 {
   "name": "plugin-flex-ts-template-v2",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "test:watch": "jest --watch",
@@ -15,11 +15,20 @@
     "deploy": "twilio flex:plugins:deploy --bypass-validation",
     "install-flex-plugin": "twilio plugins:install @twilio-labs/plugin-flex@7.1.0",
     "release": "twilio flex:plugins:release --plugin ${npm_package_name}@${npm_package_version}",
-    "start": "twilio flex:plugins:start",
+    "start": "twilio flex:plugins:start --include-remote",
     "twilio": "twilio"
   },
   "dependencies": {
     "@emoji-mart/react": "1.1.1",
+    "@tiptap/extension-dropcursor": "^2.14.0",
+    "@tiptap/extension-image": "^2.14.0",
+    "@tiptap/extension-link": "^2.14.0",
+    "@tiptap/extension-paragraph": "^2.14.0",
+    "@tiptap/extension-text": "^2.14.0",
+    "@tiptap/extension-text-align": "^2.14.0",
+    "@tiptap/pm": "^2.14.0",
+    "@tiptap/react": "^2.14.0",
+    "@tiptap/starter-kit": "^2.14.0",
     "@twilio-paste/core": "^17.0.1",
     "@twilio-paste/icons": "^9.4.2",
     "@twilio/flex-plugin": "7.1.0",
@@ -30,9 +39,11 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-minimal-pie-chart": "^8.4.0",
+    "reactjs-tiptap-editor": "^0.1.16",
     "rrule": "^2.7.1",
     "semver": "^7.6.3",
-    "simple-audio-recorder": "^1.2.3"
+    "simple-audio-recorder": "^1.2.3",
+    "tiptap-extension-resize-image": "^1.2.2"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.12.1",
