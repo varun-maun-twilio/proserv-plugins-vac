@@ -32,6 +32,15 @@
       "outbound_recording": {
         "enabled": true,
         "include_queues": []
+      },
+      "email_search": {
+        "enabled": false
+      },
+      "worker_capacity": {
+        "enabled": false
+      },
+      "persistent_drafts": {
+        "enabled": false
       }
     }
   }

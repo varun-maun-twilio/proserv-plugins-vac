@@ -86,6 +86,11 @@ class FlexHelper {
     return queue;
   };
 
+  getAllQueues = async (): Promise<Array<string> | undefined> => {
+    const queueResult = await QueueInstantQuery("");
+    return Object.values(queueResult).map(q=>q.queue_name);
+  };
+
   getWorker = async (workerSid: string): Promise<WorkerIndexItem | undefined> => {
     const workerResult = await WorkerInstantQuery(`data.worker_sid EQ "${workerSid}"`);
     const worker = workerResult[workerSid];

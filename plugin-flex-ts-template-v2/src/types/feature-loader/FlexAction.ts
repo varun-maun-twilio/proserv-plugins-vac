@@ -22,6 +22,7 @@ export enum FlexAction {
   ShowDirectory = 'ShowDirectory',
   TransferTask = 'TransferTask',
   WrapupTask = 'WrapupTask',
+  Logout = 'Logout'
 }
 
 export enum FlexActionEvent {

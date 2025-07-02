@@ -12,6 +12,8 @@ import ResizableImageExtension from './ImageResizeExtension';
 import * as HTMLTemplates from "./HTMLEditorTemplates";
 
 
+
+
 export const ExtendedImage = Image.extend({
   addAttributes() {
     return {
@@ -98,7 +100,7 @@ const HTMLEditor = forwardRef((props:Props, ref) => {
       alt: '', 
       title: '', 
       width: 185, 
-      height: 65,
+      height: 55,
       style:"margin:0px;"
     }
     editor.chain().focus().setImage(imageAttributes).run();

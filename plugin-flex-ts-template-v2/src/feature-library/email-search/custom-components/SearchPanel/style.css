@@ -1,0 +1,39 @@
+.search-email-form-table{
+    width: 100%
+}
+
+.search-email-form-table td{
+    padding: 5px;
+}
+
+
+
+
+.queue-select-wrapper{
+    width: calc(100% - 0px);
+    margin-left: 4px;
+    margin-top: -4px;
+}
+
+.queue-select-wrapper > div{
+    width: 100%;
+}
+
+div[data-paste-element="MODAL"]{
+    max-width: 90% !important;
+}
+
+.messaging-canvas-wrapper{
+    height:calc(90vh - 200px);
+    width:100%;
+
+}
+
+.messaging-canvas-wrapper > div{
+    min-height: 100%;
+}
+
+
+.messaging-canvas-wrapper button#email-reply-button{
+    display: none;
+}

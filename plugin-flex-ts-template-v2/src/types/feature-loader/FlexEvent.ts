@@ -12,4 +12,5 @@ export enum FlexEvent {
   workerAttributesUpdated = 'workerAttributesUpdated',
   pluginsInitialized = 'pluginsInitialized',
   tokenUpdated = 'tokenUpdated',
+  userLoggedIn = 'userLoggedIn'
 }
