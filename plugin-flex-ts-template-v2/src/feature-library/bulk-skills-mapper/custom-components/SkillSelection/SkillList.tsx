@@ -20,7 +20,7 @@ import { BulkSkillsTable, ChipFilter, TextFilter, ListWrapper, ListFooter } from
 
 
 interface ComponentProps {
-    onSelectionChanged?: (selectedValues: string[]) => void;
+    updateSelectedSkills: (selectedValues: any[]) => void;
 }
 
 
@@ -30,6 +30,10 @@ const SkillList = (props: ComponentProps) => {
 
 
     const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
+
+    useEffect(()=>{
+        props.updateSelectedSkills(selectedSkills);
+    },[selectedSkills]);
 
     const [allSkills, setAllSkills] = useState<any[]>([]);
     const [skillSearchText, setSkillSearchText] = useState<string>("");

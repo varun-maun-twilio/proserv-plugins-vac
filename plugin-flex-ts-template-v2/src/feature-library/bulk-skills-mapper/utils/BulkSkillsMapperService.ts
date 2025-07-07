@@ -6,17 +6,16 @@ import logger from '../../../utils/logger';
 
 class BulkSkillsMapperService extends ApiService {
  
-  fetchWorkers = async (queryParams:any): Promise<any> => {
-
-
-    const queryStr = (new URLSearchParams(queryParams)).toString();
-
+  updateSkills = async (operation:string,workerSid:string,skills:any[]): Promise<any> => {
     const encodedParams: EncodedParams = {
       Token: encodeURIComponent(this.manager.user.token),
+      operation,
+      workerSid,
+      skills:JSON.stringify(skills)
     };
     try {
       return await this.fetchJsonWithReject<any>(
-        `${this.serverlessProtocol}://${this.serverlessDomain}/features/bulk-skills-mapper/flex/search-workers?${queryStr}`,
+        `${this.serverlessProtocol}://${this.serverlessDomain}/features/bulk-skills-mapper/flex/update-worker-skills`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -24,7 +23,7 @@ class BulkSkillsMapperService extends ApiService {
         },
       );
     } catch (error: any) {
-      logger.error('[bulk-skills-mapper] Error fetchWorkers', error);
+      logger.error('[bulk-skills-mapper] Error updateSkills', error);
       throw error;
     }
   };

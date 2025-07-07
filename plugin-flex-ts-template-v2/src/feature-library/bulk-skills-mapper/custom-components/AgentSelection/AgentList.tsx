@@ -22,7 +22,7 @@ import useWorkerAPI from "./useWorkerAPI";
 import useQueueAPI from "./useQueueAPI";
 
 interface ComponentProps {
-    onSelectionChanged?: (selectedValues: string[]) => void;
+    updateSelectedAgents: (selectedValues: any[]) => void;
 }
 
 
@@ -33,6 +33,10 @@ const AgentList = (props: ComponentProps) => {
     const [selectedQueue, setSelectedQueue] = useState<string | null>(null);
 
     const [selectedAgents, setSelectedAgents] = useState<any[]>([]);
+
+    useEffect(()=>{
+        props.updateSelectedAgents(selectedAgents);
+    },[selectedAgents]);
 
     const {
         data: allQueues,

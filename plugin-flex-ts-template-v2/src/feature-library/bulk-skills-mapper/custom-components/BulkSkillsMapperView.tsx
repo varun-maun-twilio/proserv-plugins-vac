@@ -9,16 +9,16 @@ import { StringTemplates } from '../flex-hooks/strings';
 import { BulkSkillsMapperViewWrapper } from './BulkSkillsMapperViewStyles';
 import AgentList from './AgentSelection/AgentList';
 import SkillList from './SkillSelection/SkillList';
-
+import UpdateSkills from './SkillUpdate/UpdateSkills';
 
 
 
 
 const BulkSkillsMapperView = () => {
 
-  const [showLoading, setShowLoading] = useState<boolean>(false);
-  const [operation, setOperation] = useState<string>("add");
-
+  const [selectedAgents,setSelectedAgents] = useState<any[]>([]);
+  const [selectedSkills,setSelectedSkills] = useState<any[]>([]);
+const [inProgress,setInProgress] = useState<boolean>(false);
 
   const initialize = async () => {
 
@@ -52,15 +52,25 @@ const BulkSkillsMapperView = () => {
           </Heading>
        
           
-            <AgentList />
+          {
+            !inProgress &&
+            <AgentList updateSelectedAgents={setSelectedAgents} />
 
-
+          }
 
           
-            <SkillList />
-
+          {
+            !inProgress &&
+            <SkillList updateSelectedSkills={setSelectedSkills}/>
+          }
 
         
+            <UpdateSkills selectedAgents={selectedAgents} 
+            selectedSkills={selectedSkills} 
+            updateInProgress={setInProgress} 
+            inProgress={inProgress}
+            updateSelectedSkills={setSelectedSkills}
+            updateSelectedAgents={setSelectedAgents} />
        
         
 
