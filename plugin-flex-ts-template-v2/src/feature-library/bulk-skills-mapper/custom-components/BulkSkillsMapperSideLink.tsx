@@ -8,7 +8,7 @@ interface OwnProps {
   viewName: string;
 }
 
-const SignatureManagementSideLink = (props: OwnProps) => {
+const BulkSkillsMapperSideLink = (props: OwnProps) => {
   const AllStrings = Manager.getInstance().strings as any;
 
   function navigate() {
@@ -18,15 +18,15 @@ const SignatureManagementSideLink = (props: OwnProps) => {
   return (
     <SideLink
       showLabel={true}
-      icon="Directory"
-      iconActive="Directory"
+      icon="Cogs"
+      iconActive="Cogs"
       isActive={props.activeView === props.viewName}
       onClick={navigate}
-      key="signature-management-side-link"
+      key="bulk-skills-mapper-side-link"
     >
-      {AllStrings[StringTemplates.SignatureManagement]}
+      {AllStrings[StringTemplates.BulkSkillsMapper]}
     </SideLink>
   );
 };
 
-export default SignatureManagementSideLink;
+export default BulkSkillsMapperSideLink;

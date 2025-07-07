@@ -19,7 +19,7 @@ import TaskRouterService, { Queue } from '../../../utils/serverless/TaskRouter/T
 import { StringTemplates } from '../flex-hooks/strings';
 
 import { SignatureManagementViewWrapper, SignatureTable, SignatureTableHeaderCell, SignatureTableBodyCell, SignatureAddBar, HTMLEditorWrapper } from './SignatureManagementViewStyles';
-import HTMLEditor from './HTMLEditor';
+import HTMLEditor from './Editor/HTMLEditor';
 
 
 const delay = (millisec: number) => {

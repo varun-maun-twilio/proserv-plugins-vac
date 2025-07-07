@@ -11,7 +11,7 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
     const { queueName } = event;
 
     const workers = await client.taskrouter.v1.workspaces(context.TWILIO_FLEX_WORKSPACE_SID).workers.list({
-      limit: 1000,
+      limit: 400,
       taskQueueName: queueName,
     });
 

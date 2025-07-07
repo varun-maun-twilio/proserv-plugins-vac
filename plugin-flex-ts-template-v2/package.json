@@ -15,7 +15,8 @@
     "deploy": "twilio flex:plugins:deploy --bypass-validation",
     "install-flex-plugin": "twilio plugins:install @twilio-labs/plugin-flex@7.1.0",
     "release": "twilio flex:plugins:release --plugin ${npm_package_name}@${npm_package_version}",
-    "start": "twilio flex:plugins:start --include-remote",
+    "start": "twilio flex:plugins:start",
+    "start2": "twilio flex:plugins:start --include-remote",
     "twilio": "twilio"
   },
   "dependencies": {
@@ -29,7 +30,7 @@
     "@tiptap/pm": "^2.14.0",
     "@tiptap/react": "^2.14.0",
     "@tiptap/starter-kit": "^2.14.0",
-    "@twilio-paste/core": "^17.0.1",
+    "@twilio-paste/core": "^17.7.0",
     "@twilio-paste/icons": "^9.4.2",
     "@twilio/flex-plugin": "7.1.0",
     "emoji-mart": "5.5.2",

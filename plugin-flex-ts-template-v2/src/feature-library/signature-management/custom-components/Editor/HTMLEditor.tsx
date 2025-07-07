@@ -10,7 +10,10 @@ import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import ResizableImageExtension from './ImageResizeExtension';
 import * as HTMLTemplates from "./HTMLEditorTemplates";
+import {Toolbar,ButtonGroup,ToolbarBtn} from "./HTMLEditorStyles";
 
+
+import { AccessAlarm, ThreeDRotation } from  '@material-ui/icons';
 
 
 
@@ -157,47 +160,59 @@ const HTMLEditor = forwardRef((props:Props, ref) => {
   return (
    <div style={{height:"300px",width:"550px"}}>
       <div className="control-group">
-      <div className="button-group">
-        <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}>
+      <Toolbar>
+        <ButtonGroup>
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}>
           H1
-        </button>
-        <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}>
           H2
-        </button>
-        <button onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}>
           H3
-        </button>
-        <button onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'is-active' : ''}>
-          Paragraph
-        </button>
-        <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive('bold') ? 'is-active' : ''}>
+        </ToolbarBtn >
+        </ButtonGroup>
+        <ButtonGroup>
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive('bold') ? 'is-active' : ''}>
           Bold
-        </button>
-        <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive('italic') ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive('italic') ? 'is-active' : ''}>
           Italic
-        </button>
-        <button onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive('strike') ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive('strike') ? 'is-active' : ''}>
           Strike
-        </button>
-        <button onClick={() => editor.chain().focus().setTextAlign('left').run()} className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}>
-          Left
-        </button>
-        <button onClick={() => editor.chain().focus().setTextAlign('center').run()} className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}>
+        </ToolbarBtn >
+        </ButtonGroup>
+        <ButtonGroup>
+        <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('left').run()} className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}>
+        <AccessAlarm  />
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('center').run()} className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}>
           Center
-        </button>
-        <button onClick={() => editor.chain().focus().setTextAlign('right').run()} className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('right').run()} className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}>
           Right
-        </button>
-        <button onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}>
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}>
           Justify
-        </button>
-        <button onClick={addImage}>Add image from URL</button>
+        </ToolbarBtn >
+        </ButtonGroup>
+
+      </Toolbar>  
+      <div className="button-group">
+        
+        <ToolbarBtn  onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'is-active' : ''}>
+          Paragraph
+        </ToolbarBtn >
+       
+       
+        <ToolbarBtn  onClick={addImage}>Add image from URL</ToolbarBtn >
         </div>
         <div className="button-group">
-        <button onClick={addVacasaLogo}>Add Vacasa Logo</button>
-        <button onClick={addVacasaTeamName}>Add Team Name</button>
-        <button onClick={addVacasaLink}>Add Link</button>
-        <button onClick={addVacasaPhoneNumber}>Add Phone Number</button>
+        <ToolbarBtn  onClick={addVacasaLogo}>Add Vacasa Logo</ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaTeamName}>Add Team Name</ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaLink}>Add Link</ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaPhoneNumber}>Add Phone Number</ToolbarBtn >
 
       </div>
     </div>

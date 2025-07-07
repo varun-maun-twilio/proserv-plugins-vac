@@ -26,6 +26,7 @@ import AppState from '../../../types/manager/AppState';
 import { reduxNamespace } from '../../../utils/state';
 import { Stack } from '@twilio-paste/core/stack';
 import { Box } from '@twilio-paste/core/box';
+import {Spinner} from '@twilio-paste/core/spinner';
 
 const StatsWrapper = styled('div')`
  width:3rem;
@@ -89,6 +90,7 @@ const QueueCapacityCard = ({ queueName }: Props) => {
     const dialog = useSideModalState({});
 
     const [workerList, setWorkerList] = useState<any[]>([]);
+    const [isLoading,setLoading] = useState<boolean>(false);
 
 
     const { workerCapacities } = useSelector(
@@ -99,18 +101,22 @@ const QueueCapacityCard = ({ queueName }: Props) => {
 
 
       const getCounts= (channel:string) =>{
+          
        return workerList?.map(w=>w.sid)?.map(w=>workerCapacities[w]?.channels?.[channel]?.available || 0).reduce((total,item)=>total+item,0)
       }
 
 
     const loadWorkers = async () => {
 
+        setLoading(true);
+        dialog.show();
+
 
         const workers = (await WorkerCapacityService.fetchQueueWorkers(queueName)).filter((x:any)=>x["available"]==true);
         setWorkerList(workers);
     
-
-        dialog.show();
+        setLoading(false);
+        
 
 
     }
@@ -172,6 +178,11 @@ const QueueCapacityCard = ({ queueName }: Props) => {
 
                         </tbody>
                     </CapacityTable>
+
+                    {
+                        isLoading &&
+                        <Spinner decorative={false} title="Loading" size="sizeIcon80" />
+                    }
 
 
                 </SideModalBody>

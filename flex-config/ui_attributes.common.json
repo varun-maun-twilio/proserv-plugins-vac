@@ -41,6 +41,9 @@
       },
       "persistent_drafts": {
         "enabled": false
+      },
+      "bulk_skills_mapper": {
+        "enabled": false
       }
     }
   }
