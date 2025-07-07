@@ -3,7 +3,7 @@ import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-
+import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import Image from '@tiptap/extension-image'
@@ -13,7 +13,7 @@ import * as HTMLTemplates from "./HTMLEditorTemplates";
 import {Toolbar,ButtonGroup,ToolbarBtn} from "./HTMLEditorStyles";
 
 
-import { AccessAlarm, ThreeDRotation } from  '@material-ui/icons';
+import { FormatAlignLeft, FormatAlignCenter, FormatAlignRight , FormatAlignJustify , FormatBold, FormatItalic, FormatUnderlined, Link as LinkIcon, AddPhotoAlternate, AddAPhoto ,Group, LocalPhone, Undo, Redo ,LocalParking} from  '@material-ui/icons';
 
 
 
@@ -59,13 +59,16 @@ const HTMLEditor = forwardRef((props:Props, ref) => {
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
+      Underline,
       Image,
       ExtendedImage,
       Link.configure({
         openOnClick: false,
         autolink: true,
         defaultProtocol: 'https',
-        protocols: ['http', 'https'],})
+        protocols: ['http', 'https']
+      }),
+      ResizableImageExtension
     ],
     content: props.initialValue,
   })
@@ -158,9 +161,18 @@ const HTMLEditor = forwardRef((props:Props, ref) => {
   }
 
   return (
-   <div style={{height:"300px",width:"550px"}}>
-      <div className="control-group">
+   <div style={{height:"300px",width:"100%",overflow:"auto"}}>
+     
       <Toolbar>
+      <ButtonGroup>
+        <ToolbarBtn onClick={() => editor.chain().focus().undo().run()} >
+          <Undo />
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().redo().run()} >
+            <Redo />
+        </ToolbarBtn >
+       
+        </ButtonGroup>
         <ButtonGroup>
         <ToolbarBtn  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}>
           H1
@@ -171,51 +183,63 @@ const HTMLEditor = forwardRef((props:Props, ref) => {
         <ToolbarBtn  onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}>
           H3
         </ToolbarBtn >
+        <ToolbarBtn  onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'is-active' : ''}>
+          P
+        </ToolbarBtn >
         </ButtonGroup>
         <ButtonGroup>
         <ToolbarBtn  onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive('bold') ? 'is-active' : ''}>
-          Bold
+          <FormatBold />
         </ToolbarBtn >
         <ToolbarBtn  onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive('italic') ? 'is-active' : ''}>
-          Italic
+          <FormatItalic />
         </ToolbarBtn >
-        <ToolbarBtn  onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive('strike') ? 'is-active' : ''}>
-          Strike
+        <ToolbarBtn  onClick={() => editor.chain().focus().toggleUnderline().run()} className={editor.isActive('underline') ? 'is-active' : ''}>
+          <FormatUnderlined />
         </ToolbarBtn >
         </ButtonGroup>
         <ButtonGroup>
         <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('left').run()} className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}>
-        <AccessAlarm  />
+        <FormatAlignLeft  />
         </ToolbarBtn >
         <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('center').run()} className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}>
-          Center
+        <FormatAlignCenter  />
         </ToolbarBtn >
         <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('right').run()} className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}>
-          Right
+          <FormatAlignRight />
         </ToolbarBtn >
         <ToolbarBtn  onClick={() => editor.chain().focus().setTextAlign('justify').run()} className={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}>
-          Justify
+          <FormatAlignJustify />
         </ToolbarBtn >
         </ButtonGroup>
 
-      </Toolbar>  
-      <div className="button-group">
+        <ButtonGroup>
         
-        <ToolbarBtn  onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'is-active' : ''}>
-          Paragraph
+        <ToolbarBtn  onClick={addImage} >
+          <AddPhotoAlternate />
         </ToolbarBtn >
-       
-       
-        <ToolbarBtn  onClick={addImage}>Add image from URL</ToolbarBtn >
-        </div>
-        <div className="button-group">
-        <ToolbarBtn  onClick={addVacasaLogo}>Add Vacasa Logo</ToolbarBtn >
-        <ToolbarBtn  onClick={addVacasaTeamName}>Add Team Name</ToolbarBtn >
-        <ToolbarBtn  onClick={addVacasaLink}>Add Link</ToolbarBtn >
-        <ToolbarBtn  onClick={addVacasaPhoneNumber}>Add Phone Number</ToolbarBtn >
+        </ButtonGroup>
+        <ButtonGroup>
+        <ToolbarBtn  onClick={addVacasaLink}>
+          <LinkIcon />
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaLogo}>
+            <AddAPhoto />
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaTeamName}>
+            <Group />
+        </ToolbarBtn >
+        <ToolbarBtn  onClick={addVacasaPhoneNumber}>
+            <LocalPhone />
+        </ToolbarBtn >
+        </ButtonGroup>
+        <ButtonGroup>
 
-      </div>
-    </div>
+        </ButtonGroup>
+
+      </Toolbar>  
+     
+   
       <EditorContent editor={editor} />
    </div>
   )

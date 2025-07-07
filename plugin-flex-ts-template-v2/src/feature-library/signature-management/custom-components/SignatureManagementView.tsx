@@ -46,7 +46,6 @@ const SignatureManagementView = () => {
   const loadAllSignatures = async () => {
     setShowLoading(true);
     const signatures = await signatureUtils.getSyncMap("emailSignatures");
-    console.error(signatures);
     setSignatureMap(signatures);
     setShowLoading(false);
   }
@@ -102,7 +101,6 @@ const SignatureManagementView = () => {
   const saveSignature = async () => {
 
     const htmlContent = htmlEditorRef?.current?.getHtmlContent();
-    console.error({ htmlContent });
 
     if(editSignatureQueue!=null){
 

@@ -1,15 +1,25 @@
 import { styled } from '@twilio/flex-ui';
 
 export const Toolbar = styled('div')`
-  display: flex;
-  width: 100%;
+background: #fafafa;
+border: 1px solid #ccc;
+border-radius: 20px;
+overflow: hidden;
+flex-wrap: wrap;
+display: flex;
+width: 100%;
+margin-bottom: 20px;
+padding-left:40px;
+
+& div:nth-child(1){
+  border-left: none !important;
+}
 `;
 
 export const ButtonGroup = styled('div')`
   display: flex;
-  flex:1;
   border-left:1px solid #ccc;
-  padding:10px 20px;
+  padding:5px 10px;
 `;
 
 
