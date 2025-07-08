@@ -39,8 +39,17 @@ const AgentList = (props: ComponentProps) => {
     },[selectedAgents]);
 
     const {
-        data: allQueues,
+        data: allQueuesObjs,
     } = useQueueAPI({}, 600);
+
+    const allQueues =  useMemo(
+        () => {
+            return allQueuesObjs.map((q:any)=>q?.friendly_name);         
+           
+        },
+        [allQueuesObjs]
+    );
+
     const [queueItems, setQueueItems] = useState(allQueues);
     const queuePopover = usePopoverState({ baseId: 'queue-filter-for-agents' });
 

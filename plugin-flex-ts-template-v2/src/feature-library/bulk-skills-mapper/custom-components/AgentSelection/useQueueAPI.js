@@ -88,7 +88,8 @@ const useQueueAPI = ( initialParams = {}, itemsPerPage = 50) => {
 
       setData(prevData => {
         
-        return [...prevData, ...newItems.map(q=>q?.friendly_name)].sort((a,b) => ('' + a.toUpperCase()).localeCompare(b.toUpperCase()));
+       // return [...prevData, ...newItems.map(q=>q?.friendly_name)].sort((a,b) => ('' + a.toUpperCase()).localeCompare(b.toUpperCase()));
+       return [...prevData, ...newItems].sort((a,b) => ('' + a.friendly_name.toUpperCase()).localeCompare(b.friendly_name.toUpperCase()));
       });
 
       
