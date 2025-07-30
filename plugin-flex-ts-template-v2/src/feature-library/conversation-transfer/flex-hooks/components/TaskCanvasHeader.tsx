@@ -17,20 +17,20 @@ export const componentHook = function addConvTransferButtons(flex: typeof Flex) 
 
   flex.TaskCanvasHeader.Content.add(<TransferButton key="conversation-transfer-button" />, {
     sortOrder: 1,
-    if: ({ task }) => TaskHelper.isCBMTask(task) && task.taskStatus === 'assigned' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='bdc' ),
+    if: ({ task }) => TaskHelper.isCBMTask(task) && task.taskStatus === 'assigned' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='booking' ),
   });
 
-  /*
+  
   flex.Supervisor.TaskCanvasHeader.Content.add(<TransferButton key="supervisor-conversation-transfer-button" />, {
     sortOrder: 1,
-    if: ({ task }) => TaskHelper.isCBMTask(task) && task.taskStatus === 'assigned',
+    if: ({ task }) => TaskHelper.isCBMTask(task) && task.taskStatus === 'assigned' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='booking' ),
   });
-  */
+  
 
   flex.TaskCanvasHeader.Content.remove("chat-transfer-button",
-  { if: ({ task }: Props) => TaskHelper.isCBMTask(task) && task.status === 'accepted' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='bdc' ) });
+  { if: ({ task }: Props) => TaskHelper.isCBMTask(task) && task.status === 'accepted' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='booking' ) });
   flex.Supervisor.TaskCanvasHeader.Content.remove("supervisor-chat-transfer-button",
-  { if: ({ task }: Props) => TaskHelper.isCBMTask(task) && task.status === 'accepted' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='bdc' )});
+  { if: ({ task }: Props) => TaskHelper.isCBMTask(task) && task.status === 'accepted' && (task.attributes.externalSource=='airbnb' || task.attributes.externalSource=='booking' )});
 
 
   if (!isMultiParticipantEnabled()) return;

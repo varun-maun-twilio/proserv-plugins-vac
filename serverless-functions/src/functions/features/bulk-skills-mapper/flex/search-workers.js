@@ -16,7 +16,8 @@ const buildQueryString = (reqObj) => {
 
 exports.handler = prepareFlexFunction(requiredParameters, async (context, event, callback, response, handleError) => {
   try {
-    const { ActivityName, Available, TaskQueueName, Ordering, PageSize, Page, PageToken } = event;
+    const { ActivityName, Available, TaskQueueName, Ordering, PageSize, Page, PageToken, TargetWorkersExpression } =
+      event;
 
     const queryStr = buildQueryString({
       ActivityName,
@@ -26,6 +27,7 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       PageSize,
       Page,
       PageToken,
+      TargetWorkersExpression,
     });
 
     const apiResponse = await axios

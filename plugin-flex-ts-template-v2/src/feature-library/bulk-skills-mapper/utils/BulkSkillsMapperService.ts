@@ -6,11 +6,12 @@ import logger from '../../../utils/logger';
 
 class BulkSkillsMapperService extends ApiService {
  
-  updateSkills = async (operation:string,workerSid:string,skills:any[]): Promise<any> => {
+  updateSkills = async (operation:string,workerSid:string,skills:any[],activity:string|undefined): Promise<any> => {
     const encodedParams: EncodedParams = {
       Token: encodeURIComponent(this.manager.user.token),
       operation,
       workerSid,
+      activity,
       skills:JSON.stringify(skills)
     };
     try {

@@ -6,7 +6,7 @@ import { Heading } from '@twilio-paste/core/heading';
 
 import { StringTemplates } from '../flex-hooks/strings';
 
-import { BulkSkillsMapperViewWrapper } from './BulkSkillsMapperViewStyles';
+import { BulkSkillsMapperViewWrapper,WidgetCard } from './BulkSkillsMapperViewStyles';
 import AgentList from './AgentSelection/AgentList';
 import SkillList from './SkillSelection/SkillList';
 import UpdateSkills from './SkillUpdate/UpdateSkills';
@@ -54,17 +54,24 @@ const [inProgress,setInProgress] = useState<boolean>(false);
           
           {
             !inProgress &&
+            <WidgetCard>
             <AgentList updateSelectedAgents={setSelectedAgents} />
-
+            </WidgetCard>
           }
+          
 
           
+         
           {
             !inProgress &&
+            <WidgetCard>
             <SkillList updateSelectedSkills={setSelectedSkills}/>
+            </WidgetCard>
           }
+          
 
         
+        <WidgetCard>
             <UpdateSkills selectedAgents={selectedAgents} 
             selectedSkills={selectedSkills} 
             updateInProgress={setInProgress} 
@@ -73,6 +80,7 @@ const [inProgress,setInProgress] = useState<boolean>(false);
             updateSelectedAgents={setSelectedAgents} />
        
         
+        </WidgetCard>
 
       </Flex>
 

@@ -12,15 +12,18 @@ export const BulkSkillsMapperViewWrapper = styled('div')`
 export const BulkSkillsTable = styled('table')`
 width:100%;
 border-collapse:separate;
-border:solid #ccc 1px;
-margin-bottom:10rem;
+border:solid #e1e3ea 1px;
+margin-bottom:1rem;
 
 
 td{
   vertical-align:top;
   padding:5px 10px;
-  border-left:solid #ccc  1px;
-  border-top:solid #ccc  1px;
+  border-left:solid #e1e3ea  1px;
+  border-top:solid #e1e3ea  1px;
+  max-width:45%;
+  width:45%;
+  padding: 1rem;
 }
 
 td:first-child {
@@ -28,11 +31,15 @@ td:first-child {
 }
 
 th {
-  vertical-align:top;
-  padding:5px 10px;
-  border-left:solid #ccc  1px;
-  border-top:none;
-  text-align:left;
+  vertical-align: top;
+  padding: 5px 10px;
+  border-left: 1px solid #e1e3ea;
+  border-top: none;
+  text-align: center;
+  padding: 1rem 0px;
+  background: #f5f5f5;
+  max-width:45%;
+  width:45%;
 }
 
 th:first-child {
@@ -71,7 +78,7 @@ margin-right:1rem;
 
 
 export const ListWrapper = styled('div')`
-width: 500px;
+width: 100%;
 height: 300px;
 overflow: auto;
 border: 1px solid #f5f5f5;
@@ -104,12 +111,22 @@ input{
 
 
 export const ListFooter = styled('div')`
-width: 500px;
+width: 100%;
 display: flex;
-padding: 10px 0px;
+padding: 2rem 0rem;
+font-size: 1rem;
 
 p{
   flex:1;
 }
+`
+
+export const WidgetCard = styled('div')`
+padding: 20px;
+border: 1px solid #e1e3ea;
+border-radius:1rem;
+margin: 0px auto;
+margin-bottom:5rem;
+width:90%
 `
 

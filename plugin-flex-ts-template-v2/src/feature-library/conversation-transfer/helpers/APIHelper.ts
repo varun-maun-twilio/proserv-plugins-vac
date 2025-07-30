@@ -1,6 +1,6 @@
 import { ITask, Manager, ConversationState, TaskHelper } from '@twilio/flex-ui';
 import merge from 'lodash/merge';
-
+import { ConversationHelper, StateHelper } from "@twilio/flex-ui";
 import TaskService from '../../../utils/serverless/TaskRouter/TaskRouterService';
 import { EncodedParams } from '../../../types/serverless';
 import ApiService from '../../../utils/serverless/ApiService';
@@ -145,7 +145,22 @@ export const buildInviteParticipantAPIPayload = async (
   }
 
   console.error({attributes:task.attributes,flexInteractionChannelSid});
-  const participants = await task.getParticipants(flexInteractionChannelSid);
+
+  console.error(task);
+
+  try{
+
+   
+    const conversationState = StateHelper.getConversationStateForTask(task);
+    
+    console.error(conversationState);
+    
+
+  const agent = await TaskHelper.findParticipantByTaskSid(task, flexInteractionChannelSid, "worker");
+  console.error({agent});
+  const participants = [agent];
+
+  //const participants = await task.getParticipants(flexInteractionChannelSid);
 
   console.error({participants});
   const workerSidsInConversationArray = _getAgentsWorkerSidArray(participants);
@@ -163,6 +178,9 @@ export const buildInviteParticipantAPIPayload = async (
     }
   }
 
+
+
+
   return {
     taskSid,
     conversationId,
@@ -177,6 +195,11 @@ export const buildInviteParticipantAPIPayload = async (
     removeFlexInteractionParticipantSid,
     taskChannelUniqueName,
   };
+}catch(e){
+  console.error("Transfer participant failed");
+  console.error(e);
+  return null;
+}
 };
 
 export interface TransferRESTResponse {

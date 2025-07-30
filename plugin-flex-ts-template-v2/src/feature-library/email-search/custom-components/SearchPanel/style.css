@@ -20,7 +20,7 @@
 }
 
 div[data-paste-element="MODAL"]{
-    max-width: 90% !important;
+  /*  max-width: 90% !important; */
 }
 
 .messaging-canvas-wrapper{

@@ -95,8 +95,8 @@ const updateSkills = (operation, prevRouting, prevDisabled, regularSkills, multi
 
 exports.handler = prepareFlexFunction(requiredParameters, async (context, event, callback, response, handleError) => {
   try {
-    const { operation, workerSid, skills } = event;
-    console.error({ operation, workerSid, skills });
+    const { operation, workerSid, skills, activity } = event;
+    console.error({ operation, workerSid, skills, activity });
     if (['Add', 'Disable', 'Delete', 'Replace', 'Overwrite'].indexOf(operation) === -1) {
       response.setStatusCode(400);
       response.setBody({
@@ -106,11 +106,11 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       return callback(null, response);
     }
 
-    if (skills.length === 0 || JSON.parse(skills).length === 0) {
+    if (activity === undefined && (skills.length === 0 || JSON.parse(skills).length === 0)) {
       response.setStatusCode(400);
       response.setBody({
         status: 'not ok',
-        error: 'skills missing for operation',
+        error: 'skills or activity missing for operation',
       });
       return callback(null, response);
     }
@@ -157,7 +157,7 @@ exports.handler = prepareFlexFunction(requiredParameters, async (context, event,
       client.taskrouter.v1
         .workspaces(process.env.TWILIO_FLEX_WORKSPACE_SID)
         .workers(workerSid)
-        .update({ attributes: JSON.stringify(newAttributes) }),
+        .update({ attributes: JSON.stringify(newAttributes), activitySid: activity }),
     );
 
     response.setBody({ status: 'ok', newRouting, newDisabled });

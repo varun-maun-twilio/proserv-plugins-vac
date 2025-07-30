@@ -9,12 +9,12 @@ import { Label } from '@twilio-paste/core/label';
 import { SearchIcon } from "@twilio-paste/icons/esm/SearchIcon";
 import { Popover, PopoverContainer, PopoverButton, usePopoverState } from '@twilio-paste/core/popover';
 import { Combobox } from '@twilio-paste/core/combobox';
-
+import {Checkbox, CheckboxGroup} from '@twilio-paste/core/checkbox';
 import { ButtonGroup } from '@twilio-paste/core/button-group';
 import { Button } from '@twilio-paste/core/button';
 import { CloseIcon } from "@twilio-paste/icons/esm/CloseIcon";
 import { BulkSkillsTable, ChipFilter, TextFilter, ListWrapper, ListFooter } from "../BulkSkillsMapperViewStyles";
-
+import useActivityAPI from "../../data-hooks/useActivityAPI";
 import BulkSkillsMapperService  from "../../utils/BulkSkillsMapperService";
 
 
@@ -35,8 +35,33 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
 
     const [selectedOperation, setSelectedOperation] = useState("Add");
     const [progressList, setProgressList] = useState<any[]>([]);
+    const [selectedActivity, setSelectedActivity] = useState<string | undefined>();
+    const [selectedActivitySid, setSelectedActivitySid] = useState<string | undefined>();
+    const [checkedForActivityUpdate, setCheckedForActivityUpdate] = useState(false);
+    const {
+        data: allActivityObjs,
+    } = useActivityAPI({}, 50);
 
+    const allActivities = useMemo(
+        () => {
+            return allActivityObjs.map((q: any) => {return {label:q?.friendly_name,value:q?.sid}});
+        },
+        [allActivityObjs]
+    );
 
+    
+    const updateSummary =  useMemo(
+        () => {
+            return {
+                total: progressList?.length,
+                pending:progressList.filter(x=>x.status=="Queued").length,
+                completed:progressList.filter(x=>x.status=="Success").length,
+                failed:progressList.filter(x=>x.status=="Failure").length
+            } 
+        },
+        [progressList]
+    );
+    
     
 
     const initiateProcess = async () => {
@@ -44,7 +69,7 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
 
         const newProgressList = [];
         for (let a of selectedAgents) {
-            newProgressList.push({ agent: a, status: "queued", selectedOperation })
+            newProgressList.push({ agent: a, status: "Queued", selectedOperation })
         }
         setProgressList(newProgressList);
         updateInProgress(true);
@@ -52,7 +77,7 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
         for(let a of selectedAgents){
                 try{
 
-                     await BulkSkillsMapperService.updateSkills(selectedOperation,a.sid,selectedSkills);
+                     await BulkSkillsMapperService.updateSkills(selectedOperation,a.sid,selectedSkills,(checkedForActivityUpdate?selectedActivitySid:undefined));
                      updateProgressItemStatus(a.sid,"Success");
 
                 }catch(e){
@@ -79,14 +104,14 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
 
     return (
 
-        <div style={{marginBottom:300}}>
+        <div style={{marginBottom:50}}>
 
             <Heading as="h3" variant="heading30"  >Skills Update</Heading>
 
 {!inProgress &&
             <Box>
 
-<Stack orientation="horizontal" spacing="space60">
+<Stack orientation="vertical" spacing="space60">
   <p>Choose Operation</p>
   <Combobox
                     autocomplete
@@ -97,6 +122,32 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
                         setSelectedOperation(changes.selectedItem);
                     }}
                 />
+
+
+
+<Checkbox
+      value="agent_activity_update"
+      name="agent_activity_update"
+      checked={checkedForActivityUpdate}
+      onChange={(event) => {
+        setCheckedForActivityUpdate(event.target.checked);
+      }}
+    >
+      Update Agent Activity
+    </Checkbox>
+
+    <Combobox disabled={!checkedForActivityUpdate} 
+               items={allActivities} 
+               labelText="Select Activity"
+               optionTemplate={(item) => <div>{item.label}</div>}
+                onSelectedItemChange={changes => {
+                    setSelectedActivity(changes.selectedItem.label);
+                    setSelectedActivitySid(changes.selectedItem.value);
+                }}
+                selectedItem={selectedActivity}
+            />
+
+
   <Button variant="primary" onClick={() => initiateProcess()} >Initiate</Button>
 </Stack>
 
@@ -119,7 +170,7 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
                             </th>
                             <th>
 
-                                <Heading as="h4" variant="heading40" marginBottom="space0" >Agent ({selectedAgents?.length})</Heading>
+                                <Heading as="h4" variant="heading40" marginBottom="space0" >Agent</Heading>
                             </th>
                             <th>
                                 <Heading as="h4" variant="heading40" marginBottom="space0" >Status</Heading>
@@ -147,10 +198,22 @@ const UpdateSkills = ({ selectedAgents,selectedSkills,updateInProgress,inProgres
             }
 
 
+{
+    inProgress && 
+    <Box margin="space40">
+        <Stack orientation="horizontal" spacing="space60">
+        <p>Pending: {updateSummary?.pending}</p>
+        <p>Completed: {updateSummary?.completed}</p>
+        <p>Failed: {updateSummary?.failed}</p>
+
+</Stack>
+    </Box>
+}
+
 
 {inProgress &&
 
-            <Box margin="space30">
+            <Box margin="space40">
                     <Button variant="secondary" onClick={()=>reset()}>Reset</Button>
             </Box>
 
