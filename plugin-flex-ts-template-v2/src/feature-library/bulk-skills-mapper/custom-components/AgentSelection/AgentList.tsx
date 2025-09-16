@@ -100,7 +100,7 @@ const AgentList = (props: ComponentProps) => {
             return (<li key={`worker-selection-${worker.sid}`} >
 
                 <span className="title" >{JSON.parse(worker.attributes).full_name || worker.friendly_name}</span>
-
+                <span className="subtitle">{worker.activity_name}</span>
                 <div className="list-action-btn">
                     <Button variant="primary" size="small"
                         onClick={() => {

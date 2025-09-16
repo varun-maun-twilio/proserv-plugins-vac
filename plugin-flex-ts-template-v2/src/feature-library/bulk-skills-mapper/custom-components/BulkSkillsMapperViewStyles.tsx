@@ -87,6 +87,8 @@ li{
   padding: 10px;
   display: flex;
   border-bottom: 1px solid #f5f5f5;
+  position:relative;
+  padding-bottom:25px;
 }
 
 span{
@@ -96,6 +98,17 @@ flex:1;
 
 span.title{
   line-height:1.6rem;
+}
+
+span.subtitle{
+  position: absolute;
+  bottom: 2px;
+  font-size: 10px;
+  left: 10px;
+  display: block;
+  padding: 2px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
 }
 
 
@@ -119,6 +132,11 @@ font-size: 1rem;
 p{
   flex:1;
 }
+
+button{
+  margin-left:25px;
+}
+
 `
 
 export const WidgetCard = styled('div')`

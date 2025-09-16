@@ -15,6 +15,7 @@ import { Button } from '@twilio-paste/core/button';
 import { CloseIcon } from "@twilio-paste/icons/esm/CloseIcon";
 import { BulkSkillsTable, ChipFilter, TextFilter, ListWrapper, ListFooter } from "../BulkSkillsMapperViewStyles";
 
+import useSkillGroupsAPI from "../../data-hooks/useSkillGroupsAPI";
 
 
 
@@ -27,6 +28,25 @@ interface ComponentProps {
 
 
 const SkillList = (props: ComponentProps) => {
+
+
+    const {
+        data: allSkillGroupMaps,
+    } = useSkillGroupsAPI({}, 100);
+
+
+    const allSkillGroups = useMemo(
+        () => {
+            return allSkillGroupMaps.map((q: any) => q?.groupName);
+
+        },
+        [allSkillGroupMaps]
+    );
+
+
+    const [selectedSkillGroup, setSelectedSkillGroup] = useState<string | null>(null);
+    const [skillGroupItems, setSkillGroupItems] = useState(allSkillGroups);
+    const skillGroupPopover = usePopoverState({ baseId: 'skill-group-filter-for-skills' });
 
 
     const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
@@ -120,13 +140,33 @@ const SkillList = (props: ComponentProps) => {
 
     const visibleAvailableSkills = useMemo(
         () => {
+
+            let filteredSkillsList = [...allSkills || []];
+
+            
+
+            if (selectedSkillGroup != null) {
+            const identifiedSkillGroup:any = allSkillGroupMaps.find(
+                (sgm:any) => sgm.groupName === selectedSkillGroup
+            ) || {skillsList:[]};
+            if (identifiedSkillGroup != null) {
+                let identifiedSkillGroupList = identifiedSkillGroup?.skillsList || [];
+                identifiedSkillGroupList = identifiedSkillGroupList.map((x:string)=>x.toUpperCase());
+                filteredSkillsList =  filteredSkillsList.filter((w: any) => {
+                    return identifiedSkillGroupList.indexOf(w.name.toUpperCase())> -1
+                })
+            }
+            }
+
+
+
             return ((skillSearchText != "") ?
-                allSkills?.filter((w: any) => {
+                filteredSkillsList?.filter((w: any) => {
                     return (w.name).toUpperCase().indexOf(skillSearchText.toUpperCase()) > -1
                 })
-                : allSkills)
+                : filteredSkillsList)
         },
-        [skillSearchText, allSkills]
+        [skillSearchText, allSkills, selectedSkillGroup]
     );
 
 
@@ -138,12 +178,16 @@ const SkillList = (props: ComponentProps) => {
         [selectedSkills]
     );
 
-    const addAllSkills = () => {
+    const addAllSkills = (setMax:boolean) => {
 
         setSelectedSkills(prevSkills => [...prevSkills, ...visibleAvailableSkills].reduce((acc, current) => {
             const x = acc.find((item: any) => item.name === current.name);
             if (!x) {
-                return acc.concat([current]);
+                let newVal:any = {...current};
+                if(newVal.multivalue==true){
+                    newVal.assigned = (setMax)?newVal.maximum:newVal.minimum;
+                }
+                return acc.concat([newVal]);
             } else {
                 return acc;
             }
@@ -193,6 +237,39 @@ const SkillList = (props: ComponentProps) => {
                                 </TextFilter>
 
                             </div>
+                            <div>
+                                <PopoverContainer state={skillGroupPopover} >
+                                    <ChipFilter isSelected={selectedSkillGroup != null}  >
+                                        <PopoverButton variant="reset" size="reset">{selectedSkillGroup ? selectedSkillGroup : "Select Skill Group"}</PopoverButton>
+                                        {
+                                            selectedSkillGroup &&
+                                            (
+                                                <Button className="remove-btn" variant="secondary_icon" size="reset" onClick={() => {
+                                                    setSelectedSkillGroup(null);
+                                                   // setWorkerFilters({ ...workerFilters, "TargetWorkersExpression": null });
+
+                                                }}>
+                                                    <CloseIcon decorative={false} title="close" />
+                                                </Button>
+                                            )
+                                        }
+                                    </ChipFilter>
+
+                                    <Popover aria-label="Filter Skills by Skill Group" >
+
+                                        <Combobox items={allSkillGroups} labelText="Select Skill Group" 
+                                            onSelectedItemChange={changes => {
+                                                setSelectedSkillGroup(changes.selectedItem);
+                                                //setWorkerFilters({ ...workerFilters, "TargetWorkersExpression": `team_name == ${changes.selectedItem}` });
+                                                skillGroupPopover.hide();
+                                            }}
+
+                                            selectedItem={selectedSkillGroup}
+                                        />
+
+                                    </Popover>
+                                </PopoverContainer>
+                            </div>
 
                         </td>
                         <td></td>
@@ -213,7 +290,8 @@ const SkillList = (props: ComponentProps) => {
                             </ListWrapper>
                             <ListFooter>
                                 <p>Showing {visibleAvailableSkills.length} Results</p>
-                                <Button variant="link" onClick={() => addAllSkills()}>( Add All )</Button>
+                                <Button variant="link" onClick={() => addAllSkills(false)}>( Add All with Min )</Button>
+                                <Button variant="link" onClick={() => addAllSkills(true)}>( Add All with Max )</Button>
                             </ListFooter>
                         </td>
                         <td>
@@ -251,3 +329,7 @@ const SkillList = (props: ComponentProps) => {
 };
 
 export default SkillList;
+function sgm(sgm: any, arg1: (any: any) => boolean) {
+    throw new Error('Function not implemented.');
+}
+

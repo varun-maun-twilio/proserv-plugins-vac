@@ -1,0 +1,13 @@
+{
+    "skillGroups":[
+        {
+            "groupName":"Voice",
+            "skillsList":["ge_tog_p1","ge_tog_p2","ge_tog_p3"]
+        },
+        {
+            "groupName":"SMS",
+            "skillsList":["ge_peak_sms","ge_peak_sms_p3","ge_peak_webchat"]
+        }
+
+    ]
+}
