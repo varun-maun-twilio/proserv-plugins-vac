@@ -1,27 +1,29 @@
+export interface MessageListSearchForm {
+  from?:string;
+  to?:string;
+  queues?:string;
+  subject?:string;
+  body?:string;
+  hasActiveTask?:string;
+}
+
 export interface MessageListItem {
-    _id: string;
-    conversationSid?: string;
-    body?: string;
-    subject?: string;
-    from?: string;
-    to?: string;
-    cc?: string;
-    creationDate: string;
-    htmlMediaSid?: string;
-    hasActiveTask?: string;
-    activeTaskSid?: string;
-    assignedToAgentSid?: string
-    assignedToQueue?: string;
+  channel:string;
+  direction:string;
+  externalContact:string;
+  customerContact:string;
+  cc:string;
+  taskQueue:string;
+  body:string;
+  subject:string;
+  hasAttachments:boolean;
+  conversationSid:string;
+  messageSid: string;
+  taskSid: string;
+  dateCreated: string;
   }
   
-  export interface MessageListSearchForm {
-    from?:string;
-    to?:string;
-    queues?:string;
-    subject?:string;
-    body?:string;
-    hasActiveTask?:string;
-  }
+  
   
   export interface SearchActiveTasksResponse{
     docs:MessageListItem[]
@@ -37,7 +39,4 @@ export interface MessageListItem {
   
 
   
-  export interface AssignTaskRequest{
-    taskList: string;
-    targetWorkerEmail:string;
-  }
+ 

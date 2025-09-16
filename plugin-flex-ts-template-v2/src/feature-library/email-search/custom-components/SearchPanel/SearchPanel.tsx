@@ -16,6 +16,8 @@ export interface OwnProps {
 
 const SearchPanel = () => {
 
+
+    const [showSearchForm,setShowSearchForm] = useState<boolean>(true);
     const [searchResults,setSearchResults] = useState<ConversationMessage[]>([]); 
     const [isSearching,setIsSearching] = useState<boolean>(false); 
 
@@ -35,7 +37,7 @@ const SearchPanel = () => {
         if(messageIndex==-1){
             filteredResults.push(message);
         }
-        else if( new Date(filteredResults[messageIndex].creationDate).getTime() < new Date(message.creationDate).getTime() ){
+        else if( new Date(filteredResults[messageIndex].dateCreated).getTime() < new Date(message.dateCreated).getTime() ){
             filteredResults.splice(messageIndex,1,message);
         }
     }
@@ -45,6 +47,7 @@ const SearchPanel = () => {
  }
 
   const performSearch =async (query:SearchQuery)=>{  
+    setShowSearchForm(false);
     setIsSearching(true);
     const searchResults = await MessageSearchUtil.search({...query});
     console.error({searchResults})
@@ -55,24 +58,27 @@ const SearchPanel = () => {
 
   return (
     
-    <div >
-        <Flex vertical   padding="space0">
-          <SearchForm  onSubmit={performSearch}  key="search-messages-form-container"/>
+    <div style={{width:"400px"}}>
+        <Flex vertical   padding="space30">
           {
-                isSearching && (
+            showSearchForm &&
+                    <SearchForm  onSubmit={performSearch}  key="search-messages-form-container"/>
+          }
+          {
+                !showSearchForm && isSearching && (
                 <Flex hAlignContent="center" vertical padding="space60" width="100%">
                     <Spinner size="sizeIcon110" decorative={false} title="Loading" />
                 </Flex>)
           }
           {
-             !isSearching && searchResults.length>0 && (
+             !showSearchForm && !isSearching && (
                  <div style={{width:"100%"}}>
-                    <SearchResults conversationMessages={searchResults} key="message-search-results" />
-                    <Flex>
+                    <SearchResults navigateToSearchForm={()=>{setShowSearchForm(true)}} conversationMessages={searchResults||[]} key="message-search-results" />
+                    {/*<Flex>
                              <Button variant="primary" size="small" onClick={()=>{}}>
                             Self Assign
                             </Button>
-                    </Flex>
+                    </Flex>*/}
                     </div>
               )
               

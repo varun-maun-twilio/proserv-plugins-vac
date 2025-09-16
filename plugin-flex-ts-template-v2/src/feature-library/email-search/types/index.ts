@@ -1,26 +1,29 @@
 export interface SearchQuery {
-    freeText: string;
-    contact: string;
-    queues?: string[];
-  }
-
-  export interface SearchMessagesRequest {
-    freeText: string;
-    contact: string;
-    queues?: string[];
-  }
-
-  export interface ConversationMessage {
-    _id: string;
-    conversationSid: string;
-    channelType:string;
-    contact: string;
-    queueName: string;
+    dateFrom: string;
+    dateTo: string;
+    externalContact:string,
+    customerContact:string,
+    channel: string;
     body: string;
     subject: string;
-    author: string;
-    creationDate:  string;
-    htmlMediaSid?: string;
+    taskQueues?: string[];
+  }
+
+
+  export interface ConversationMessage {
+    channel:string;
+    direction:string;
+    externalContact:string;
+    customerContact:string;
+    cc:string;
+    taskQueue:string;
+    body:string;
+    subject:string;
+    hasAttachments:boolean;
+    conversationSid:string;
+    messageSid: string;
+    taskSid: string;
+    dateCreated: string;
   }
 
 
@@ -28,3 +31,8 @@ export interface SearchQuery {
     messages: ConversationMessage[]
   }
 
+
+  export interface AssignTaskRequest{
+    conversationList: string;
+    targetWorkerEmail:string;
+  }

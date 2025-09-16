@@ -80,7 +80,16 @@ const SearchForm = ({ onSubmit }: Props) => {
       bodyInput
     })
 
-    //onSubmit({ freeText: messageSearchInput, contact: contactInput, queues: selectedQueuesList });
+    onSubmit({  
+      dateFrom: startDate,
+      dateTo: endDate,
+      externalContact:fromInput,
+      customerContact:toInput,
+      channel:"email",
+      body: bodyInput,
+      subject: subjectInput,
+      taskQueues:[]
+    });
   }
 
   const clearForm = () => {
@@ -94,7 +103,9 @@ const SearchForm = ({ onSubmit }: Props) => {
 
   return (
     <div style={{width:"100%"}}>
-
+    <Heading as="h3" variant="heading20">
+      Message Search:
+    </Heading>
       <table className={"search-email-form-table"} >
         <tbody>
           <tr>
@@ -102,14 +113,17 @@ const SearchForm = ({ onSubmit }: Props) => {
               <Label htmlFor={"search-email-fromDate"}>Start date:</Label>
               <DatePicker id={"search-email-fromDate"} onChange={(evt) => setStartDate(evt.target.value)} />
             </td>
-            <td>
+            
+          </tr>
+          <tr>
+          <td>
               <Label htmlFor={"search-email-toDate"}>End date:</Label>
               <DatePicker id={"search-email-toDate"} onChange={(evt) => setEndDate(evt.target.value)} min={startDate} />
             </td>
-          </tr>
+            </tr>
           <tr>
             <td >
-              <Label htmlFor={"search-email-from"}>From:</Label>
+              <Label htmlFor={"search-email-from"}>External Contact:</Label>
               <Input
                 type="text"
                 id="search-message-from"
@@ -119,10 +133,11 @@ const SearchForm = ({ onSubmit }: Props) => {
                 onChange={e => setFromInput(e.target.value)}
               />
             </td>
-          
+          </tr>
+          <tr>
             <td >
 
-              <Label htmlFor={"search-email-to"}>To:</Label>
+              <Label htmlFor={"search-email-to"}>Customer Contact:</Label>
               <Input
                 type="text"
                 id="search-message-to"
@@ -134,7 +149,7 @@ const SearchForm = ({ onSubmit }: Props) => {
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td >
               <Label htmlFor={"search-email-subject"}>Subject:</Label>
               <Input
                 type="text"
@@ -147,7 +162,7 @@ const SearchForm = ({ onSubmit }: Props) => {
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td >
               <Label htmlFor={"search-email-body"}>Body:</Label>
               <Input
                 type="text"
@@ -160,7 +175,7 @@ const SearchForm = ({ onSubmit }: Props) => {
             </td>
           </tr>
           <tr>
-            <td colSpan={2}>
+            <td >
               <div className="queue-select-wrapper">
                 <Label htmlFor={"search-email-queue"}>Queue:</Label>
                 <MuiSelect

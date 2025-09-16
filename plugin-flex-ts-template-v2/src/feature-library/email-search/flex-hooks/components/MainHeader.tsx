@@ -6,11 +6,19 @@ import { isFeatureEnabled } from '../../config';
 
 export const componentName = FlexComponent.MainHeader;
 export const componentHook = function addDeviceManagerToMainHeader(flex: typeof Flex) {
+
+ 
   if (!isFeatureEnabled()) {
     return;
   }
-  flex.MainHeader.Content.add(<EmailSearchToggleBtn key="search-email-trigger" />, {
-    sortOrder: -1,
-    align: 'end',
-  });
+
+  flex.MainHeader.Content.add(
+    <EmailSearchToggleBtn key="main-header-icon-conversation-search" />,
+    {
+      align: 'end',
+      sortOrder: -1,
+    },
+  );
+
+  
 };

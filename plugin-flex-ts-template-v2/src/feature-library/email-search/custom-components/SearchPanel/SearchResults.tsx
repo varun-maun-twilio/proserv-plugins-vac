@@ -1,15 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useMemo } from 'react';
 import * as TwilioFlex from '@twilio/flex-ui';
-import { CheckboxGroup, Checkbox } from "@twilio-paste/core/checkbox";
-import { useUIDSeed } from "@twilio-paste/core/uid-library";
-import {
-  DataGrid,
-  DataGridHead,
-  DataGridRow,
-  DataGridHeader,
-  DataGridBody,
-  DataGridCell
-} from "@twilio-paste/core/data-grid";
   import {
     Flex,
     Text,
@@ -25,174 +15,193 @@ import {
   } from "@twilio-paste/core";
   import {Box} from '@twilio-paste/core/box';
 import {ConversationMessage} from '../../types';
-import {ArrowForwardIcon} from '@twilio-paste/icons/esm/ArrowForwardIcon';
+import { ChevronLeftIcon } from "@twilio-paste/icons/esm/ChevronLeftIcon";
 import {Modal, ModalBody, ModalFooter, ModalFooterActions, ModalHeader, ModalHeading} from '@twilio-paste/core/modal';
+import { Combobox } from '@twilio-paste/core/combobox';
 import moment from 'moment';
 import { MessagingCanvas } from '@twilio/flex-ui';
 import {MessageListItem} from "../../types/MessageSearchTypes"
+import {SearchResultsTable,EmailPreviewCard} from "./SearchPanelViewStyles"
 import MessageSearchUtil from '../../utils/MessageSearchUtil';
-
-const TableHeaderData = [
-  "Date",
-  "Queue",
-  "From",
-  "To",
-  "Subject",
-  "Task Exists"
-];
-
-const TableBodyDataFields = [
-  "creationDate",
-  "assignedToQueue",
-  "from",
-  "to",
-  "subject",
-  "hasActiveTask"
-];
-import CheckboxCell from "./CheckboxCell";
-
 import "./style.css";
 
+import useWorkerAPI from "../../data-hooks/useWorkerAPI";
+
   interface Props {
-    conversationMessages: MessageListItem[]
+    conversationMessages: MessageListItem[],
+    navigateToSearchForm: ()=>void
   }
 
-const SearchResults = ({conversationMessages}:Props) => {
+const SearchResults = ({conversationMessages,navigateToSearchForm}:Props) => {
  
-  const seed = useUIDSeed();
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  
+  const [isConversationModalOpen,setIsConversationModalOpen] = useState<boolean>(false);
+  const [modalConversation,setModalConversation] = useState<string | null>();
+  const [isWorkerAssignmentModalOpen,setIsWorkerAssignmentModalOpen] = useState<boolean>(false);
 
-  const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
+  const {
+      data: allWorkerObjs,
+  } = useWorkerAPI({}, 50);
 
-  const allChecked = checkedItems.every(Boolean);
-  const indeterminate = checkedItems.some(Boolean) && !allChecked;
+  const allWorkers = useMemo(
+    () => {
+        return allWorkerObjs//.map((q: any) => q?.friendly_name);
 
-
-  const [modalMessage,setModalMessage] = useState<MessageListItem | null>();
-    const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
-    const [modalContent,setModalContent] = useState<string | null>();
-
+    },
+    [allWorkerObjs]
+);
+const [selectedWorker, setSelectedWorker] = useState<any | null>(null);
     
 
     useEffect(() => {
 
       if(conversationMessages!=null){
-        setCheckedItems(conversationMessages.map(()=>false));
+        setSelectedRows([]);
       }
 
     }, [conversationMessages]);
 
   useEffect(() => {
-  }, [modalContent,isModalOpen]);
+  }, [modalConversation,isConversationModalOpen]);
 
 
-  const loadHTMLBodyContent = async (mediaSid:string,message:MessageListItem)=>{
-    console.error({mediaSid});
-    setModalContent(mediaSid);
-    setModalMessage(message);
+   // Handles the selection of all rows
+   const handleSelectAll = (event:any) => {
+    if (event.target.checked) {
+      const allRowIds = conversationMessages.map((message) => message.conversationSid);
+      setSelectedRows(allRowIds);
+    } else {
+      setSelectedRows([]);
+    }
+  };
 
-    setIsModalOpen(true);
+  // Handles the selection of a single row
+  const handleSelectRow = (event:any, id:string) => {
+    if (event.target.checked) {
+      setSelectedRows([...selectedRows, id]);
+    } else {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    }
+  };
 
+  // Check if all rows are selected
+  const allRowsSelected = selectedRows.length === conversationMessages.length && conversationMessages.length > 0;
+
+  const openThreadModal = (conversationSid:string) => {
+    setModalConversation(conversationSid);
+    setIsConversationModalOpen(true); 
   }
 
   const onAssignClicked = async ()=>{
-    let selectedTasks = [];
-    for(let iter=0;iter<conversationMessages.length;iter++){
-      if(checkedItems[iter]){
-        selectedTasks.push(conversationMessages[iter].activeTaskSid);
-      }
-    }
-
-    /*
-    MessageSearchUtil.assignTasks({
+   
+   
+    await MessageSearchUtil.assignTasks({
       targetWorkerEmail:TwilioFlex?.Manager?.getInstance()?.workerClient?.attributes?.email || "",
-      taskList:selectedTasks.join(',')
+      conversationList:selectedRows.join(',')
     })
-    */
+    
 
   
 }
 
-const cloneIntoNewMail = async()=>{
+const onAssignToOthersClicked = async ()=>{   
+  setIsWorkerAssignmentModalOpen(true);
+}
 
-  setIsModalOpen(false);
-
-  TwilioFlex.Actions.invokeAction("StartOutboundEmailTask", {
-    destination: "vmaun@twilio.com",
-    queueSid: "WQ5f50082569a097416e23427fdd92ec21",
-    from: "support@varun-maun.co.in",
-    fromName: "support"
+const onAssignToSelectedAgentClicked = async ()=>{
+  const selectedWorkerEmail = JSON.parse(selectedWorker?.attributes||'{}')?.email;
+  await MessageSearchUtil.assignTasks({
+    targetWorkerEmail:selectedWorkerEmail|| "",
+    conversationList:selectedRows.join(',')
   });
+  setIsWorkerAssignmentModalOpen(false);
+  
 }
 
 
-
   return (
-<div style={{marginTop:"20px",overflow:"auto",scrollBehavior:"smooth",height:"calc(100vh - 400px)",width:"100%"}}>
+<div style={{marginTop:"0px",overflow:"auto",scrollBehavior:"smooth",width:"400px",maxWidth:"400px",minWidth:"400px"}}>
     
+<div>
+<Button variant="link" onClick={()=>navigateToSearchForm()}>  <ChevronLeftIcon decorative={false} title="Back" /> Modify Filters</Button>
+</div>   
 
-<Box width="100%">
+{conversationMessages?.length==0 &&
 
-<CheckboxGroup name="items" legend="">
-<DataGrid aria-label="example grid">
-  <DataGridHead>
-    <DataGridRow>
-      <DataGridHeader width="55px">
-        <CheckboxCell
-          onClick={(checked: boolean) => {
-            const newCheckedItems = checkedItems.map(() => checked);
-            setCheckedItems(newCheckedItems);
-          }}
-          id={seed("select-all")}
-          checked={allChecked}
-          indeterminate={indeterminate}
-          label="Select all"
-        />
-      </DataGridHeader>
-      <DataGridHeader>Date</DataGridHeader>
-      <DataGridHeader>Queue</DataGridHeader>
-      <DataGridHeader>From / To</DataGridHeader>
-      <DataGridHeader>Subject</DataGridHeader>
-      <DataGridHeader>Has Task?</DataGridHeader>
-     
-    </DataGridRow>
-  </DataGridHead>
-  <DataGridBody>
-    {conversationMessages.map((row:MessageListItem, rowIndex) => (
-      <DataGridRow
-        key={`row-${rowIndex}`}
-        selected={checkedItems[rowIndex]}
-      >
-        <DataGridCell>
-          <CheckboxCell
-            onClick={(checked: boolean) => {
-              const newCheckedItems = [...checkedItems];
-              newCheckedItems[rowIndex] = checked;
-              setCheckedItems(newCheckedItems);
-            }}
-            id={seed(`row-${rowIndex}-checkbox`)}
-            checked={checkedItems[rowIndex]}
-            label={`Select row ${rowIndex}`}
-          />
-        </DataGridCell>
-       
-          <DataGridCell key={`col-1`}><Button variant="link" onClick={() => {loadHTMLBodyContent(row.conversationSid || "",row)}}>{moment(row.creationDate).format('MM/DD/YYYY HH:mm')}</Button></DataGridCell>
-          <DataGridCell key={`col-2`}>{row.assignedToQueue}</DataGridCell>
-          <DataGridCell key={`col-3`}>{`${row.from} / ${row.to}`}</DataGridCell>
-          <DataGridCell key={`col-4`}>{row.subject}</DataGridCell>
-          <DataGridCell key={`col-5`}>{((row.hasActiveTask+"")=='true')?"Y":"N"}</DataGridCell>
-      </DataGridRow>
-    ))}
-  </DataGridBody>
-</DataGrid>
-</CheckboxGroup>
-</Box>
-<Flex>
-                             <Button variant="primary" size="small" onClick={()=>onAssignClicked()}>
+
+  <p style={{"textAlign":"center"}}>No Results Found</p>
+  
+}
+
+{conversationMessages?.length>0 &&
+(<>
+<SearchResultsTable>
+        <thead>
+          <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={allRowsSelected}
+              />
+            </th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {conversationMessages.map((message, index) => (
+            <tr key={message.conversationSid} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+              <td>
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleSelectRow(e, message.conversationSid)}
+                  checked={selectedRows.includes(message.conversationSid)}
+                />
+              </td>
+              <td>
+                <EmailPreviewCard onClick={() => openThreadModal(message.conversationSid)}>
+                <p className={"customerContact"}>{message.customerContact}</p>
+                  
+                  <p> 
+                  <span className={"taskQueue"}>{message.taskQueue} | </span>
+                    <span className={"externalContact"}>{message.externalContact}</span>
+                  </p>
+                   
+                   <p className={"emailSubject"}>{message.subject?.substring(0,30)}</p>
+                  
+                   <p className={"emailDate"}>{moment(message.dateCreated).format('MM/DD/YYYY HH:mm')}</p>
+                   </EmailPreviewCard>
+              </td>
+              
+  
+             
+            </tr>
+          ))}
+        </tbody>
+      </SearchResultsTable>
+
+
+<div style={{marginTop:"20px",marginLeft:"20px"}}>
+
+<Stack orientation="horizontal" spacing="space60">
+    <Button variant="primary" size="small" onClick={()=>{onAssignClicked()}}>
                             Self Assign
                             </Button>
-                    </Flex>
+    <Button variant="secondary" size="small" onClick={()=>{onAssignToOthersClicked()}}>
+                            Assign To Others
+                            </Button>
+  
+</Stack>
+
+
+                           
+</div>
+</>
+)}
+
  
-<Modal className="full-screen-modal" isOpen={isModalOpen} onDismiss={() => { setIsModalOpen(false); } } size="wide"  ariaLabelledby={'hello'}>
+<Modal className="full-screen-modal" isOpen={isConversationModalOpen} onDismiss={() => { setIsConversationModalOpen(false); } } size="wide"  ariaLabelledby={'hello'}>
         <ModalHeader>
           <ModalHeading as="h3" >
             Email Details
@@ -200,9 +209,9 @@ const cloneIntoNewMail = async()=>{
         </ModalHeader>
         <ModalBody>
             {
-                (modalContent!=null) && (
+                (modalConversation!=null) && (
                     <div className="messaging-canvas-wrapper">
-                    <MessagingCanvas key="conversation-messaging-canvas" sid={modalContent} conversationType="email" autoInitConversation={true}>
+                    <MessagingCanvas key="conversation-messaging-canvas" sid={modalConversation} conversationType="email" autoInitConversation={true}>
                </MessagingCanvas>
                </div>
                 )
@@ -211,10 +220,42 @@ const cloneIntoNewMail = async()=>{
         </ModalBody>
         <ModalFooter>
           <ModalFooterActions>
-          <Button variant="primary" onClick={()=>{cloneIntoNewMail()}}>
-              Send Email
+            <Button variant="primary" onClick={()=>{setIsConversationModalOpen(false)}}>
+              Close
             </Button>
-            <Button variant="secondary" onClick={()=>{setIsModalOpen(false)}}>
+          </ModalFooterActions>
+        </ModalFooter>
+      </Modal>
+
+      <Modal className="full-screen-modal" isOpen={isWorkerAssignmentModalOpen} onDismiss={() => { setIsWorkerAssignmentModalOpen(false); } }  size="default"  ariaLabelledby={'worker-assignment-modal'}>
+        <ModalHeader>
+          <ModalHeading as="h3" >
+            Assign Tasks
+          </ModalHeading>
+        </ModalHeader>
+        <ModalBody>
+           
+        <Combobox items={allWorkers} labelText="Select Agent" 
+                                            onSelectedItemChange={changes => {
+                                              setSelectedWorker(changes.selectedItem);
+                            
+                                            }}
+                                            itemToString={w=>w.friendly_name}
+                                            optionTemplate={(item) => (
+                                             <Text as="span">
+                                                    {item.friendly_name} 
+                                             </Text>                                             
+                                            )}
+
+                                            selectedItem={selectedWorker}
+                                        />
+        </ModalBody>
+        <ModalFooter>
+          <ModalFooterActions>
+          <Button variant="primary" onClick={()=>{onAssignToSelectedAgentClicked()}}>
+              Assign
+            </Button>
+            <Button variant="secondary" onClick={()=>{setIsWorkerAssignmentModalOpen(false)}}>
               Cancel
             </Button>
           </ModalFooterActions>

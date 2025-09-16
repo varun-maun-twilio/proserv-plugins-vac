@@ -1,18 +1,12 @@
 import { styled } from '@twilio/flex-ui';
-import { EmailIcon } from "@twilio-paste/icons/esm/EmailIcon";
-import {
-    SideModal,
-    SideModalBody,
-    SideModalButton,
-    SideModalContainer,
-    SideModalHeader,
-    SideModalHeading,
-  } from '@twilio-paste/core/side-modal';
+import { SearchIcon } from "@twilio-paste/icons/esm/SearchIcon";
+import { useState } from 'react';
+import SearchModal from './SearchModal/SearchModal';
 
-import SearchPanel from "./SearchPanel/SearchPanel"
 
 const St = {
-    CompassChatbotIconContainer: styled.div`
+
+    CompassChatbotIconContainer: styled.a`
       display: flex;
       align-items: center;
       border: 0;
@@ -30,35 +24,26 @@ const St = {
 
    const EmailSearchToggleBtn: React.FC = () => {
   
+    const [isModalOpen,setIsModalOpen] = useState(false);
 
+    const toggleModal = ()=>{
+      setIsModalOpen((prev)=>!prev);
+    }
   
     return (
 
-        <SideModalContainer >
-        <SideModalButton variant="secondary_icon" size="icon_small" >
-          <EmailIcon decorative={false}  title="Open side modal" />
-        </SideModalButton>
-        <SideModal aria-label="Basic Side Modal">
-          <SideModalHeader>
-            <SideModalHeading>
-              Search Email
-            </SideModalHeading>
-          </SideModalHeader>
-          <SideModalBody>
-          <SearchPanel key="message-search-panel" />
+      <>  
+       <St.CompassChatbotIconContainer onClick={()=>toggleModal()}>
+          <SearchIcon decorative={false}  title="Open side modal" />
+          </St.CompassChatbotIconContainer>
+       
+      <SearchModal isOpen={isModalOpen} toggleModal={()=>toggleModal()} />
 
-           
-          </SideModalBody>
-        </SideModal>
-      </SideModalContainer>
-
+     
+      
+       </>
       
     );
   };
 
   export default EmailSearchToggleBtn;
-  /*
-<St.CompassChatbotIconContainer onClick={handleOnclick}>
-        <EmailIcon decorative={false} title="Description of icon" />
-      </St.CompassChatbotIconContainer>
-  */

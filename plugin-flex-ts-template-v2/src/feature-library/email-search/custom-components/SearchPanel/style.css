@@ -19,10 +19,6 @@
     width: 100%;
 }
 
-div[data-paste-element="MODAL"]{
-  /*  max-width: 90% !important; */
-}
-
 .messaging-canvas-wrapper{
     height:calc(90vh - 200px);
     width:100%;
